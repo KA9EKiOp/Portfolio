@@ -3,858 +3,1142 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio — Video Editor & Thumbnail Designer</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Space+Mono&display=swap" rel="stylesheet">
+<title>TheyNG — Video Editor & Thumbnail Designer</title>
+<meta name="description" content="TheyNG — Video Editor & Thumbnail Designer for YouTube Creators, Instagram Creators & Brands. Fast delivery, unlimited revisions.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0a0a;
-    --surface: #111111;
-    --surface2: #1a1a1a;
-    --border: #222;
-    --accent: #e8ff00;
-    --accent2: #ff4d00;
-    --text: #f0f0f0;
-    --muted: #666;
-    --card-radius: 12px;
-  }
+:root {
+  --bg: #f7f6f3;
+  --bg2: #f0ede8;
+  --surface: #ffffff;
+  --border: #e2ddd8;
+  --border2: #ccc8c2;
+  --ink: #111110;
+  --ink2: #3a3936;
+  --muted: #9a9690;
+  --accent: #1a1a18;
+  --gold: #c9a84c;
+  --red: #c0392b;
+  --r: 4px;
+}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
-  html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Syne', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+/* CUSTOM CURSOR */
+.cursor {
+  width: 8px; height: 8px;
+  background: var(--ink);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform .15s ease;
+  transform: translate(-50%, -50%);
+}
+.cursor-ring {
+  width: 36px; height: 36px;
+  border: 1px solid var(--ink2);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  transition: all .25s ease;
+  transform: translate(-50%, -50%);
+  opacity: .4;
+}
+body:hover .cursor { transform: translate(-50%, -50%) scale(1); }
+a:hover ~ .cursor, button:hover ~ .cursor { transform: translate(-50%, -50%) scale(2); }
 
-  /* ── NOISE OVERLAY ── */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9999;
-    opacity: .5;
-  }
+/* HEADER */
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0 6vw;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(247,246,243,.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
 
-  /* ── HEADER ── */
-  header {
-    padding: 0 5vw;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 72px;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    background: rgba(10,10,10,.9);
-    backdrop-filter: blur(12px);
-    z-index: 100;
-  }
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.logo span {
+  color: var(--gold);
+}
 
-  .logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.6rem;
-    letter-spacing: 2px;
-    color: var(--text);
-  }
-  .logo span { color: var(--accent); }
+nav { display: flex; align-items: center; gap: 36px; }
+nav a {
+  font-size: .78rem;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color .2s;
+}
+nav a:hover { color: var(--ink); }
 
-  nav { display: flex; gap: 28px; }
-  nav a {
-    font-size: .85rem;
-    font-weight: 500;
-    color: var(--muted);
-    text-decoration: none;
-    letter-spacing: .5px;
-    transition: color .2s;
-  }
-  nav a:hover { color: var(--text); }
+.nav-cta {
+  padding: 9px 22px;
+  background: var(--ink);
+  color: var(--bg) !important;
+  border-radius: 2px;
+  font-size: .75rem !important;
+  letter-spacing: 2px !important;
+  transition: background .2s, transform .15s !important;
+}
+.nav-cta:hover { background: var(--ink2) !important; transform: translateY(-1px); }
 
-  .hire-btn {
-    background: var(--accent);
-    color: #000;
-    border: none;
-    padding: 9px 22px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 600;
-    font-size: .85rem;
-    letter-spacing: .5px;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: opacity .2s, transform .15s;
-  }
-  .hire-btn:hover { opacity: .85; transform: translateY(-1px); }
+/* HERO */
+.hero {
+  min-height: 100vh;
+  padding: 0 6vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding-top: 68px;
+}
 
-  /* ── HERO ── */
-  .hero {
-    padding: 100px 5vw 80px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
+.hero-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: .5;
+  z-index: 0;
+}
+.hero-grid-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, transparent 40%, var(--bg) 80%);
+}
 
-  .hero-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    padding: 6px 14px;
-    border-radius: 100px;
-    font-size: .75rem;
-    font-family: 'Space Mono', monospace;
-    color: var(--accent);
-    letter-spacing: 1px;
-    margin-bottom: 24px;
-  }
-  .hero-tag::before {
-    content: '';
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: pulse 1.8s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: .4; transform: scale(1.4); }
-  }
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  padding: 60px 0;
+}
 
-  .hero h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(3.5rem, 7vw, 7rem);
-    line-height: .95;
-    letter-spacing: 2px;
-    margin-bottom: 24px;
-  }
-  .hero h1 em {
-    font-style: normal;
-    color: var(--accent);
-    display: block;
-  }
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: .68rem;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 24px; height: 1px;
+  background: var(--gold);
+}
 
-  .hero p {
-    font-size: 1rem;
-    color: var(--muted);
-    line-height: 1.7;
-    max-width: 440px;
-  }
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3.5rem, 7vw, 6.5rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -1px;
+  color: var(--ink);
+  margin-bottom: 28px;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+.hero h1 strong {
+  font-weight: 600;
+}
 
-  .hero-stats {
-    display: flex;
-    gap: 36px;
-    margin-top: 40px;
-  }
-  .stat-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.5rem;
-    color: var(--text);
-    line-height: 1;
-  }
-  .stat-num span { color: var(--accent); }
-  .stat-label {
-    font-size: .75rem;
-    color: var(--muted);
-    letter-spacing: .5px;
-    margin-top: 4px;
-  }
+.hero-desc {
+  font-size: .95rem;
+  color: var(--ink2);
+  line-height: 1.8;
+  max-width: 420px;
+  font-weight: 400;
+  margin-bottom: 40px;
+}
 
-  .hero-visual {
-    position: relative;
-    height: 400px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .reel-card {
-    width: 100%;
-    max-width: 500px;
-    height: 280px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    position: relative;
-    cursor: pointer;
-  }
-  .reel-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(232,255,0,.05), transparent 60%);
-  }
-  .reel-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    height: 100%;
-    gap: 3px;
-    padding: 3px;
-  }
-  .reel-cell {
-    border-radius: 6px;
-    animation: shimmer 3s ease-in-out infinite;
-  }
-  .reel-cell:nth-child(1) { background: linear-gradient(135deg, #1a1a1a, #2a2a2a); animation-delay: 0s; }
-  .reel-cell:nth-child(2) { background: linear-gradient(135deg, #222, #1a3a1a); animation-delay: .3s; }
-  .reel-cell:nth-child(3) { background: linear-gradient(135deg, #2a1a1a, #1a1a2a); animation-delay: .6s; }
-  .reel-cell:nth-child(4) { background: linear-gradient(135deg, #1a2a2a, #2a2a1a); animation-delay: .9s; }
-  .reel-cell:nth-child(5) { background: linear-gradient(135deg, #1a1a3a, #2a1a2a); animation-delay: 1.2s; }
-  .reel-cell:nth-child(6) { background: linear-gradient(135deg, #3a2a1a, #1a2a1a); animation-delay: 1.5s; }
-  @keyframes shimmer {
-    0%, 100% { opacity: .6; }
-    50% { opacity: 1; }
-  }
-  .reel-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0,0,0,.3);
-    border-radius: 14px;
-  }
-  .play-icon {
-    width: 60px; height: 60px;
-    border-radius: 50%;
-    background: var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #000;
-    font-size: 1.4rem;
-    transition: transform .2s;
-    cursor: pointer;
-  }
-  .reel-card:hover .play-icon { transform: scale(1.1); }
+.hero-actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
 
-  .floating-badge {
-    position: absolute;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 16px;
-    font-size: .78rem;
-    font-family: 'Space Mono', monospace;
-  }
-  .floating-badge.top-right {
-    top: 20px; right: -20px;
-    color: var(--accent);
-    border-color: rgba(232,255,0,.3);
-  }
-  .floating-badge.bottom-left {
-    bottom: 40px; left: -20px;
-    color: var(--accent2);
-    border-color: rgba(255,77,0,.3);
-  }
+.btn-primary {
+  padding: 14px 32px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: 'Syne', sans-serif;
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  border-radius: 2px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background .2s, transform .15s;
+}
+.btn-primary:hover { background: var(--ink2); transform: translateY(-2px); }
 
-  /* ── SECTION HEADER ── */
-  .section-header {
-    padding: 60px 5vw 0;
-    max-width: 1400px;
-    margin: 0 auto;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  .section-label {
-    font-family: 'Space Mono', monospace;
-    font-size: .7rem;
-    color: var(--accent);
-    letter-spacing: 3px;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-  }
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    letter-spacing: 2px;
-    line-height: 1;
-  }
+.btn-outline {
+  padding: 13px 28px;
+  background: transparent;
+  color: var(--ink);
+  font-family: 'Syne', sans-serif;
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: 1px solid var(--border2);
+  cursor: pointer;
+  border-radius: 2px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: border-color .2s, transform .15s;
+}
+.btn-outline:hover { border-color: var(--ink); transform: translateY(-2px); }
 
-  /* ── FOLDER TABS ── */
-  .folder-tabs {
-    padding: 32px 5vw 0;
-    max-width: 1400px;
-    margin: 0 auto;
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .tab-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: .85rem;
-    font-weight: 500;
-    color: var(--muted);
-    cursor: pointer;
-    transition: all .2s;
-    position: relative;
-    overflow: hidden;
-  }
-  .tab-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--accent);
-    transform: translateY(100%);
-    transition: transform .2s;
-    z-index: 0;
-  }
-  .tab-btn span, .tab-btn .tab-count { position: relative; z-index: 1; }
-  .tab-btn:hover { border-color: var(--accent); color: var(--text); }
-  .tab-btn.active { border-color: var(--accent); color: #000; }
-  .tab-btn.active::before { transform: translateY(0); }
-  .tab-count {
-    background: rgba(255,255,255,.12);
-    border-radius: 100px;
-    padding: 2px 8px;
-    font-size: .7rem;
-    font-family: 'Space Mono', monospace;
-  }
-  .tab-btn.active .tab-count { background: rgba(0,0,0,.15); }
+/* HERO STATS */
+.hero-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
-  .tab-icon { font-size: 1rem; }
+.stats-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
 
-  /* ── FILTER BAR ── */
-  .filter-bar {
-    padding: 20px 5vw 0;
-    max-width: 1400px;
-    margin: 0 auto;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .filter-label {
-    font-size: .75rem;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-  }
-  .filter-chip {
-    padding: 5px 14px;
-    border: 1px solid var(--border);
-    border-radius: 100px;
-    font-size: .75rem;
-    color: var(--muted);
-    cursor: pointer;
-    transition: all .15s;
-    background: none;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .filter-chip:hover, .filter-chip.active { border-color: var(--accent2); color: var(--accent2); }
+.stat-item {}
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.stat-num sup { font-size: 1.2rem; color: var(--gold); vertical-align: super; }
+.stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  color: var(--muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
 
-  /* ── GRID ── */
-  .portfolio-grid {
-    padding: 32px 5vw 80px;
-    max-width: 1400px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 20px;
-  }
+.tools-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px 24px;
+}
+.tools-label {
+  font-family: 'DM Mono', monospace;
+  font-size: .62rem;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.tools-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tool-chip {
+  padding: 6px 14px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  font-family: 'DM Mono', monospace;
+  font-size: .68rem;
+  color: var(--ink2);
+  letter-spacing: .5px;
+}
 
-  /* PROJECT CARD */
-  .project-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--card-radius);
-    overflow: hidden;
-    transition: transform .25s, border-color .25s, box-shadow .25s;
-    cursor: pointer;
-    position: relative;
-  }
-  .project-card:hover {
-    transform: translateY(-6px);
-    border-color: rgba(232,255,0,.3);
-    box-shadow: 0 24px 48px rgba(0,0,0,.5), 0 0 0 1px rgba(232,255,0,.1);
-  }
-  .card-thumb {
-    position: relative;
-    padding-top: 56.25%; /* 16:9 */
-    overflow: hidden;
-    background: var(--surface2);
-  }
-  .card-thumb.square { padding-top: 75%; } /* thumbnails */
-  .thumb-placeholder {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem;
-    font-family: 'Bebas Neue', sans-serif;
-    letter-spacing: 3px;
-  }
-  /* Colorful thumbnail backgrounds */
-  .bg-1 { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); }
-  .bg-2 { background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); }
-  .bg-3 { background: linear-gradient(135deg, #2d1b69, #11998e, #38ef7d); filter: brightness(.5); }
-  .bg-4 { background: linear-gradient(135deg, #f7971e, #ffd200); filter: brightness(.4); }
-  .bg-5 { background: linear-gradient(135deg, #ee0979, #ff6a00); filter: brightness(.4); }
-  .bg-6 { background: linear-gradient(135deg, #02aab0, #00cdac); filter: brightness(.4); }
-  .bg-7 { background: linear-gradient(135deg, #1f1c18, #333); }
-  .bg-8 { background: linear-gradient(135deg, #141e30, #243b55); }
-  .bg-9 { background: linear-gradient(135deg, #200122, #6f0000); }
-  .bg-10 { background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); }
+.avail-block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  background: rgba(201,168,76,.08);
+  border: 1px solid rgba(201,168,76,.25);
+  border-radius: var(--r);
+  font-family: 'DM Mono', monospace;
+  font-size: .68rem;
+  color: var(--ink2);
+  letter-spacing: 1px;
+}
+.avail-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes pulse {
+  0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.4)}
+  50%{opacity:.8;box-shadow:0 0 0 6px rgba(34,197,94,0)}
+}
 
-  .card-type-badge {
-    position: absolute;
-    top: 12px; left: 12px;
-    background: rgba(0,0,0,.7);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,.1);
-    padding: 4px 10px;
-    border-radius: 5px;
-    font-size: .65rem;
-    font-family: 'Space Mono', monospace;
-    letter-spacing: 1px;
-    color: #fff;
-  }
-  .card-type-badge.video { color: var(--accent); border-color: rgba(232,255,0,.3); }
-  .card-type-badge.thumb { color: var(--accent2); border-color: rgba(255,77,0,.3); }
+/* SECTION COMMON */
+section { padding: 100px 6vw; }
+.section-wrap { max-width: 1200px; margin: 0 auto; }
 
-  .card-play {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0,0,0,0);
-    transition: background .25s;
-  }
-  .project-card:hover .card-play { background: rgba(0,0,0,.4); }
-  .card-play-btn {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    background: var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #000;
-    font-size: 1.1rem;
-    opacity: 0;
-    transform: scale(.7);
-    transition: opacity .2s, transform .2s;
-  }
-  .project-card:hover .card-play-btn { opacity: 1; transform: scale(1); }
+.section-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  color: var(--muted);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.section-eyebrow::before { content:''; width:20px; height:1px; background:var(--gold); }
 
-  .card-body { padding: 18px 20px 20px; }
-  .card-category {
-    font-size: .7rem;
-    font-family: 'Space Mono', monospace;
-    color: var(--accent2);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-  .card-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.3rem;
-    letter-spacing: 1px;
-    line-height: 1.2;
-    margin-bottom: 8px;
-  }
-  .card-desc {
-    font-size: .8rem;
-    color: var(--muted);
-    line-height: 1.6;
-    margin-bottom: 14px;
-  }
-  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-  .tag {
-    padding: 3px 10px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 100px;
-    font-size: .68rem;
-    color: var(--muted);
-    font-family: 'DM Sans', sans-serif;
-  }
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.section-title em { font-style: italic; color: var(--gold); }
 
-  /* WIDE CARD (featured) */
-  .project-card.wide {
-    grid-column: span 2;
-    display: grid;
-    grid-template-columns: 1.3fr 1fr;
-  }
-  .project-card.wide .card-thumb {
-    padding-top: 0;
-    height: 100%;
-    min-height: 200px;
-  }
-  @media (max-width: 768px) {
-    .project-card.wide {
-      grid-column: span 1;
-      display: block;
-    }
-    .project-card.wide .card-thumb { padding-top: 56.25%; height: auto; }
-    .hero { grid-template-columns: 1fr; }
-    .hero-visual { display: none; }
-    .floating-badge { display: none; }
-  }
+.section-sub {
+  font-size: .9rem;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 480px;
+}
 
-  /* ── LIGHTBOX ── */
-  .lightbox {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.92);
-    z-index: 1000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(10px);
-  }
-  .lightbox.open { display: flex; }
-  .lightbox-inner {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    width: 90vw;
-    max-width: 820px;
-    overflow: hidden;
-    position: relative;
-    animation: popIn .25s cubic-bezier(.34,1.56,.64,1) forwards;
-  }
-  @keyframes popIn {
-    from { opacity: 0; transform: scale(.9); }
-    to { opacity: 1; transform: scale(1); }
-  }
-  .lb-close {
-    position: absolute;
-    top: 16px; right: 16px;
-    width: 36px; height: 36px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    font-size: 1rem;
-    color: var(--text);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    transition: background .15s;
-  }
-  .lb-close:hover { background: var(--accent); color: #000; }
-  .lb-media {
-    background: #000;
-    padding-top: 56.25%;
-    position: relative;
-    overflow: hidden;
-  }
-  .lb-media-inner {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .lb-media-inner .big-icon { font-size: 3rem; }
-  .lb-info { padding: 28px 32px; }
-  .lb-category {
-    font-size: .7rem;
-    font-family: 'Space Mono', monospace;
-    color: var(--accent2);
-    letter-spacing: 2px;
-    margin-bottom: 8px;
-  }
-  .lb-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2rem;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-  }
-  .lb-desc { font-size: .9rem; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
-  .lb-meta {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-  .lb-meta-item { font-size: .78rem; font-family: 'Space Mono', monospace; color: var(--muted); }
-  .lb-meta-item strong { color: var(--text); display: block; margin-bottom: 2px; }
+/* DIVIDER */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-  /* ── ABOUT STRIP ── */
-  .about-strip {
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 60px 5vw;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    max-width: 1400px;
-    margin: 0 auto 0;
-  }
-  .about-strip h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.5rem;
-    letter-spacing: 2px;
-    margin-bottom: 16px;
-  }
-  .about-strip p { font-size: .9rem; color: var(--muted); line-height: 1.8; }
-  .skills-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-  .skill-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 14px 16px;
-  }
-  .skill-name { font-size: .85rem; font-weight: 500; margin-bottom: 6px; }
-  .skill-bar { height: 3px; background: var(--border); border-radius: 100px; overflow: hidden; }
-  .skill-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    border-radius: 100px;
-    transition: width 1s ease;
-  }
+/* SERVICES */
+.services-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin-top: 56px;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.service-card {
+  padding: 36px 32px;
+  border-right: 1px solid var(--border);
+  transition: background .2s;
+  position: relative;
+  overflow: hidden;
+}
+.service-card:last-child { border-right: none; }
+.service-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transition: transform .3s ease;
+  transform-origin: left;
+}
+.service-card:hover { background: var(--bg); }
+.service-card:hover::before { transform: scaleX(1); }
 
-  /* ── FOOTER ── */
-  footer {
-    padding: 40px 5vw;
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: gap;
-    gap: 16px;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-  .footer-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.3rem;
-    letter-spacing: 2px;
-  }
-  .footer-logo span { color: var(--accent); }
-  .footer-copy { font-size: .78rem; color: var(--muted); }
-  .footer-links { display: flex; gap: 20px; }
-  .footer-links a {
-    font-size: .8rem;
-    color: var(--muted);
-    text-decoration: none;
-    transition: color .2s;
-  }
-  .footer-links a:hover { color: var(--accent); }
+.service-icon {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  display: block;
+}
+.service-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -.3px;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+.service-desc {
+  font-size: .82rem;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.service-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.service-tag {
+  padding: 3px 10px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  font-family: 'DM Mono', monospace;
+  font-size: .62rem;
+  color: var(--muted);
+}
 
-  /* EMPTY STATE */
-  .empty-state {
-    grid-column: 1 / -1;
-    padding: 80px 20px;
-    text-align: center;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-    font-size: .85rem;
-    display: none;
-  }
-  .empty-state.show { display: block; }
-  .empty-icon { font-size: 3rem; margin-bottom: 16px; }
+/* PORTFOLIO */
+.portfolio-section { background: var(--bg); }
+.portfolio-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+  gap: 24px;
+}
 
-  /* SCROLL ANIMATIONS */
-  .fade-up {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity .5s ease, transform .5s ease;
-  }
-  .fade-up.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* TABS */
+.filter-tabs {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--surface);
+}
+.filter-tab {
+  padding: 9px 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  border: none;
+  background: none;
+  border-right: 1px solid var(--border);
+  transition: all .15s;
+}
+.filter-tab:last-child { border-right: none; }
+.filter-tab:hover { color: var(--ink); background: var(--bg2); }
+.filter-tab.active { background: var(--ink); color: var(--bg); }
+
+/* PROJECT GRID */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+.project-card {
+  background: var(--surface);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background .2s;
+}
+.project-card:hover { background: var(--bg2); }
+
+.card-media {
+  position: relative;
+  padding-top: 62%;
+  overflow: hidden;
+  background: var(--bg2);
+}
+.card-media.sq { padding-top: 75%; }
+.card-media-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  transition: transform .4s ease;
+}
+.project-card:hover .card-media-inner { transform: scale(1.05); }
+.card-media img, .card-media iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+}
+
+/* gradient overlays for placeholder backgrounds */
+.g1{background:linear-gradient(135deg,#e8e4de,#d4cfc8)}
+.g2{background:linear-gradient(135deg,#dde4e8,#c8d4d8)}
+.g3{background:linear-gradient(135deg,#e4dde8,#d0c8d8)}
+.g4{background:linear-gradient(135deg,#e8e4d8,#d8d0c0)}
+.g5{background:linear-gradient(135deg,#dde8e4,#c8d8d0)}
+.g6{background:linear-gradient(135deg,#e8ddd8,#d8c8c0)}
+
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(17,17,16,0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .25s;
+}
+.project-card:hover .card-overlay { background: rgba(17,17,16,.55); }
+.card-play {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(247,246,243,.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bg);
+  font-size: .9rem;
+  opacity: 0;
+  transform: scale(.7);
+  transition: opacity .2s, transform .25s;
+}
+.project-card:hover .card-play { opacity: 1; transform: scale(1); }
+
+.card-type {
+  position: absolute;
+  top: 12px; left: 12px;
+  background: rgba(247,246,243,.9);
+  backdrop-filter: blur(6px);
+  border-radius: 2px;
+  padding: 3px 9px;
+  font-family: 'DM Mono', monospace;
+  font-size: .58rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink2);
+}
+
+.card-body { padding: 20px 22px 22px; }
+.card-niche {
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  color: var(--gold);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.card-desc {
+  font-size: .78rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.card-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.ctag {
+  padding: 2px 8px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  color: var(--muted);
+}
+
+.project-card.featured {
+  grid-column: span 2;
+}
+.project-card.featured .card-media { padding-top: 42%; }
+
+/* EMPTY */
+.grid-empty {
+  grid-column: 1/-1;
+  padding: 80px;
+  text-align: center;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: .75rem;
+  letter-spacing: 1px;
+  display: none;
+}
+.grid-empty.show { display: block; }
+
+/* LIGHTBOX */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(17,17,16,.85);
+  backdrop-filter: blur(12px);
+  z-index: 300;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.lightbox.open { display: flex; }
+.lb-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  width: 100%;
+  max-width: 780px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: lbIn .25s ease;
+}
+@keyframes lbIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+.lb-media {
+  background: var(--bg2);
+  aspect-ratio: 16/9;
+  position: relative;
+  overflow: hidden;
+}
+.lb-media iframe, .lb-media img {
+  width: 100%; height: 100%;
+  border: none;
+  object-fit: contain;
+}
+.lb-placeholder {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: .72rem;
+  color: var(--muted);
+}
+.lb-placeholder .big { font-size: 2.8rem; }
+.lb-info { padding: 28px 32px; }
+.lb-cat {
+  font-family: 'DM Mono', monospace;
+  font-size: .62rem;
+  color: var(--gold);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.lb-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.lb-desc { font-size: .85rem; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+.lb-meta { display: flex; gap: 28px; flex-wrap: wrap; }
+.lb-meta-item { font-family: 'DM Mono', monospace; font-size: .68rem; color: var(--muted); }
+.lb-meta-item strong { display: block; color: var(--ink); margin-bottom: 2px; font-size: .72rem; }
+.lb-close-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 20px 0;
+}
+.lb-close-btn {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: .8rem;
+  color: var(--ink2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s;
+}
+.lb-close-btn:hover { background: var(--ink); color: var(--bg); }
+
+/* ABOUT */
+.about-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+  margin-top: 56px;
+}
+.about-text p {
+  font-size: .9rem;
+  color: var(--ink2);
+  line-height: 1.9;
+  margin-bottom: 16px;
+}
+.about-text p:last-child { margin-bottom: 0; }
+
+.about-right {}
+.about-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 28px;
+  margin-bottom: 16px;
+}
+.about-card-label {
+  font-family: 'DM Mono', monospace;
+  font-size: .62rem;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.tools-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.tool-pill {
+  padding: 7px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  font-family: 'DM Mono', monospace;
+  font-size: .68rem;
+  color: var(--ink2);
+  letter-spacing: .5px;
+}
+
+.perks-list { display: flex; flex-direction: column; gap: 12px; }
+.perk {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: .85rem;
+  color: var(--ink2);
+}
+.perk-icon {
+  width: 28px; height: 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .85rem;
+  flex-shrink: 0;
+}
+
+/* CONTACT */
+.contact-section { background: var(--ink); }
+.contact-section .section-eyebrow { color: rgba(247,246,243,.4); }
+.contact-section .section-eyebrow::before { background: var(--gold); }
+.contact-section .section-title { color: var(--bg); }
+.contact-section .section-title em { color: var(--gold); }
+.contact-section .section-sub { color: rgba(247,246,243,.5); }
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  margin-top: 56px;
+}
+.contact-links { display: flex; flex-direction: column; gap: 12px; }
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  background: rgba(247,246,243,.05);
+  border: 1px solid rgba(247,246,243,.1);
+  border-radius: var(--r);
+  text-decoration: none;
+  color: var(--bg);
+  transition: background .2s, border-color .2s, transform .15s;
+}
+.contact-link:hover {
+  background: rgba(247,246,243,.1);
+  border-color: rgba(201,168,76,.4);
+  transform: translateX(4px);
+}
+.contact-link-icon {
+  width: 38px; height: 38px;
+  background: rgba(247,246,243,.08);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.contact-link-text { font-size: .85rem; font-weight: 500; }
+.contact-link-sub { font-family: 'DM Mono', monospace; font-size: .62rem; color: rgba(247,246,243,.4); margin-top: 2px; letter-spacing: 1px; }
+.contact-link-arrow { margin-left: auto; opacity: .4; font-size: .9rem; }
+
+.contact-note {
+  background: rgba(247,246,243,.04);
+  border: 1px solid rgba(247,246,243,.1);
+  border-radius: var(--r);
+  padding: 32px;
+}
+.contact-note-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--bg);
+  margin-bottom: 16px;
+  line-height: 1.3;
+}
+.contact-note-title em { font-style: italic; color: var(--gold); }
+.contact-note p {
+  font-size: .83rem;
+  color: rgba(247,246,243,.5);
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+.contact-note-perks { display: flex; flex-direction: column; gap: 10px; }
+.cnp {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  color: rgba(247,246,243,.6);
+  letter-spacing: 1px;
+}
+.cnp::before { content: '✓'; color: var(--gold); font-size: .8rem; }
+
+/* FOOTER */
+footer {
+  background: var(--ink);
+  border-top: 1px solid rgba(247,246,243,.08);
+  padding: 28px 6vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.footer-logo { font-family:'Syne',sans-serif; font-weight:800; font-size:1rem; color:var(--bg); }
+.footer-logo span { color:var(--gold); }
+.footer-copy { font-family:'DM Mono',monospace; font-size:.62rem; color:rgba(247,246,243,.3); letter-spacing:1px; }
+.footer-links { display:flex; gap:24px; }
+.footer-links a { font-family:'DM Mono',monospace; font-size:.62rem; color:rgba(247,246,243,.35); text-decoration:none; letter-spacing:1px; text-transform:uppercase; transition:color .2s; }
+.footer-links a:hover { color:var(--gold); }
+
+/* ANIMATIONS */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+  .hero-right { display: none; }
+  .services-grid { grid-template-columns: 1fr; }
+  .service-card { border-right: none; border-bottom: 1px solid var(--border); }
+  .service-card:last-child { border-bottom: none; }
+  .project-grid { grid-template-columns: 1fr 1fr; }
+  .project-card.featured { grid-column: span 2; }
+  .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+  nav { display: none; }
+}
+@media(max-width:600px){
+  section { padding: 70px 5vw; }
+  header { padding: 0 5vw; }
+  .project-grid { grid-template-columns: 1fr; }
+  .project-card.featured { grid-column: span 1; }
+  .stats-block { grid-template-columns: 1fr 1fr; }
+  footer { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .footer-links { flex-wrap: wrap; gap: 16px; }
+}
 </style>
 </head>
 <body>
 
+<!-- CUSTOM CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
 <!-- HEADER -->
 <header>
-  <div class="logo">YOUR<span>.</span>REEL</div>
+  <a href="#" class="logo">TheyNG<span>.</span></a>
   <nav>
     <a href="#work">Work</a>
+    <a href="#services">Services</a>
     <a href="#about">About</a>
-    <a href="#contact">Contact</a>
+    <a href="#contact" class="nav-cta">Hire Me</a>
   </nav>
-  <button class="hire-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Hire Me</button>
 </header>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-content">
-    <div class="hero-tag">AVAILABLE FOR WORK</div>
-    <h1>VIDEO<br>EDITOR &<em>THUMBNAIL<br>DESIGNER</em></h1>
-    <p>Crafting compelling visual stories through precise editing and eye-catching thumbnails that drive clicks and keep audiences watching.</p>
-    <div class="hero-stats">
-      <div>
-        <div class="stat-num">50<span>+</span></div>
-        <div class="stat-label">PROJECTS DONE</div>
+  <div class="hero-grid-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Video Editor & Thumbnail Designer</div>
+      <h1>
+        Results<br>
+        over <em>resume.</em><br>
+        <strong>Every time.</strong>
+      </h1>
+      <p class="hero-desc">
+        Hi, I'm Avinash — editing under the name TheyNG. I help YouTube creators, Instagram creators and brands tell better stories through sharp edits and scroll-stopping thumbnails.
+      </p>
+      <div class="hero-actions">
+        <a href="#work" class="btn-primary">View My Work →</a>
+        <a href="#contact" class="btn-outline">Get In Touch</a>
       </div>
-      <div>
-        <div class="stat-num">3<span>+</span></div>
-        <div class="stat-label">YEARS EDITING</div>
+    </div>
+    <div class="hero-right">
+      <div class="avail-block">
+        <div class="avail-dot"></div>
+        Available for new projects · India & International
       </div>
-      <div>
-        <div class="stat-num">20<span>+</span></div>
-        <div class="stat-label">CLIENTS</div>
+      <div class="stats-block">
+        <div class="stat-item">
+          <div class="stat-num">3<sup>+</sup></div>
+          <div class="stat-label">Projects Done</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">3<sup>+</sup></div>
+          <div class="stat-label">Niches Covered</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">24<sup>hr</sup></div>
+          <div class="stat-label">Avg Turnaround</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Revisions</div>
+        </div>
+      </div>
+      <div class="tools-block">
+        <div class="tools-label">Tools I Use</div>
+        <div class="tools-list">
+          <span class="tool-chip">Premiere Pro</span>
+          <span class="tool-chip">After Effects</span>
+          <span class="tool-chip">Photoshop</span>
+          <span class="tool-chip">AI Tools</span>
+        </div>
       </div>
     </div>
   </div>
-  <div class="hero-visual">
-    <div class="reel-card">
-      <div class="reel-grid">
-        <div class="reel-cell bg-1"></div>
-        <div class="reel-cell bg-2"></div>
-        <div class="reel-cell bg-5"></div>
-        <div class="reel-cell bg-4"></div>
-        <div class="reel-cell bg-3"></div>
-        <div class="reel-cell bg-6"></div>
+</section>
+
+<!-- SERVICES -->
+<section class="services-section" id="services">
+  <div class="section-wrap">
+    <div class="reveal">
+      <div class="section-eyebrow">What I Do</div>
+      <h2 class="section-title">Services I <em>Offer</em></h2>
+      <p class="section-sub">From long-form YouTube edits to punchy reels and eye-catching thumbnails — I handle your full visual pipeline.</p>
+    </div>
+    <div class="services-grid reveal">
+      <div class="service-card">
+        <span class="service-icon">🎬</span>
+        <div class="service-name">Video Editing</div>
+        <div class="service-desc">Long-form YouTube videos edited for maximum retention — cuts, transitions, colour grading, music sync and captions.</div>
+        <div class="service-tags">
+          <span class="service-tag">Premiere Pro</span>
+          <span class="service-tag">Color Grade</span>
+          <span class="service-tag">YouTube</span>
+        </div>
       </div>
-      <div class="reel-overlay">
-        <div class="play-icon">▶</div>
+      <div class="service-card">
+        <span class="service-icon">🖼️</span>
+        <div class="service-name">Thumbnail Design</div>
+        <div class="service-desc">CTR-optimised thumbnails with bold typography, dramatic lighting and high-contrast visuals that make people click.</div>
+        <div class="service-tags">
+          <span class="service-tag">Photoshop</span>
+          <span class="service-tag">Typography</span>
+          <span class="service-tag">CTR Focus</span>
+        </div>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">✨</span>
+        <div class="service-name">Motion Graphics & AI Video</div>
+        <div class="service-desc">Animated intros, lower thirds, motion graphics and AI-generated video content for brands and creators.</div>
+        <div class="service-tags">
+          <span class="service-tag">After Effects</span>
+          <span class="service-tag">AI Tools</span>
+          <span class="service-tag">Motion</span>
+        </div>
       </div>
     </div>
-    <div class="floating-badge top-right">4K EDITING</div>
-    <div class="floating-badge bottom-left">PREMIERE PRO</div>
   </div>
 </section>
 
 <!-- PORTFOLIO -->
-<section id="work">
-  <div class="section-header fade-up">
-    <div>
-      <div class="section-label">// MY WORK</div>
-      <h2 class="section-title">PORTFOLIO</h2>
+<section class="portfolio-section" id="work">
+  <div class="section-wrap">
+    <div class="portfolio-header reveal">
+      <div>
+        <div class="section-eyebrow">Portfolio</div>
+        <h2 class="section-title">My <em>Work</em></h2>
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="filterProjects('all',this)">All</button>
+        <button class="filter-tab" onclick="filterProjects('video',this)">Videos</button>
+        <button class="filter-tab" onclick="filterProjects('thumbnail',this)">Thumbnails</button>
+        <button class="filter-tab" onclick="filterProjects('motion',this)">Motion</button>
+      </div>
     </div>
-    <p style="color:var(--muted);font-size:.85rem;max-width:300px">Browse by category — click any project to see the details.</p>
-  </div>
-
-  <!-- FOLDER TABS -->
-  <div class="folder-tabs fade-up">
-    <button class="tab-btn active" onclick="filterCategory('all', this)">
-      <span class="tab-icon">📁</span>
-      <span>All Work</span>
-      <span class="tab-count" id="count-all">0</span>
-    </button>
-    <button class="tab-btn" onclick="filterCategory('video', this)">
-      <span class="tab-icon">🎬</span>
-      <span>Videos</span>
-      <span class="tab-count" id="count-video">0</span>
-    </button>
-    <button class="tab-btn" onclick="filterCategory('thumbnail', this)">
-      <span class="tab-icon">🖼️</span>
-      <span>Thumbnails</span>
-      <span class="tab-count" id="count-thumbnail">0</span>
-    </button>
-    <button class="tab-btn" onclick="filterCategory('shorts', this)">
-      <span class="tab-icon">⚡</span>
-      <span>Shorts / Reels</span>
-      <span class="tab-count" id="count-shorts">0</span>
-    </button>
-    <button class="tab-btn" onclick="filterCategory('motion', this)">
-      <span class="tab-icon">✨</span>
-      <span>Motion Graphics</span>
-      <span class="tab-count" id="count-motion">0</span>
-    </button>
-  </div>
-
-  <!-- FILTER CHIPS -->
-  <div class="filter-bar fade-up">
-    <span class="filter-label">NICHE:</span>
-    <button class="filter-chip active" onclick="filterNiche('all', this)">All</button>
-    <button class="filter-chip" onclick="filterNiche('gaming', this)">Gaming</button>
-    <button class="filter-chip" onclick="filterNiche('vlog', this)">Vlog</button>
-    <button class="filter-chip" onclick="filterNiche('business', this)">Business</button>
-    <button class="filter-chip" onclick="filterNiche('music', this)">Music</button>
-    <button class="filter-chip" onclick="filterNiche('educational', this)">Educational</button>
-    <button class="filter-chip" onclick="filterNiche('lifestyle', this)">Lifestyle</button>
-  </div>
-
-  <!-- PROJECT GRID -->
-  <div class="portfolio-grid" id="portfolioGrid">
-    <!-- Cards injected by JS -->
-    <div class="empty-state" id="emptyState">
-      <div class="empty-icon">📂</div>
-      No projects match this filter yet.
+    <div class="project-grid reveal" id="projectGrid">
+      <div class="grid-empty" id="gridEmpty">No projects in this category yet.</div>
     </div>
   </div>
 </section>
 
 <!-- ABOUT -->
-<section id="about">
-  <div class="about-strip fade-up">
-    <div>
-      <div class="section-label">// ABOUT ME</div>
-      <h2>THE PERSON BEHIND THE EDITS</h2>
-      <p>I'm a video editor and thumbnail designer with a passion for making content that stops the scroll. From long-form YouTube videos to punchy Reels and eye-grabbing thumbnails — I handle the full visual pipeline so creators can focus on what they do best.</p>
-      <br>
-      <p style="color:var(--muted)">I work with <strong style="color:var(--text)">Adobe Premiere Pro</strong>, <strong style="color:var(--text)">After Effects</strong>, <strong style="color:var(--text)">Photoshop</strong> and <strong style="color:var(--text)">DaVinci Resolve</strong>. Fast turnarounds, clear communication, revisions until it's perfect.</p>
+<section class="about-section" id="about">
+  <div class="section-wrap">
+    <div class="reveal">
+      <div class="section-eyebrow">About</div>
+      <h2 class="section-title">The Person <em>Behind the Edits</em></h2>
     </div>
-    <div class="skills-grid">
-      <div class="skill-item"><div class="skill-name">Premiere Pro</div><div class="skill-bar"><div class="skill-fill" style="width:95%"></div></div></div>
-      <div class="skill-item"><div class="skill-name">After Effects</div><div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div></div>
-      <div class="skill-item"><div class="skill-name">Photoshop</div><div class="skill-bar"><div class="skill-fill" style="width:92%"></div></div></div>
-      <div class="skill-item"><div class="skill-name">DaVinci Resolve</div><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
-      <div class="skill-item"><div class="skill-name">Color Grading</div><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div></div>
-      <div class="skill-item"><div class="skill-name">Motion Graphics</div><div class="skill-bar"><div class="skill-fill" style="width:78%"></div></div></div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>Hey, I'm <strong>Avinash Shubranshu</strong> — a dedicated video editor and thumbnail designer working under the name <strong>TheyNG</strong>.</p>
+        <p>I've been obsessed with editing, spending countless hours learning, practising and levelling up my skills in Premiere Pro, After Effects and Photoshop. What I lack in years, I make up for in commitment and hunger to deliver quality work.</p>
+        <p>I work with <strong>YouTube creators</strong>, <strong>Instagram / Reels creators</strong> and <strong>businesses</strong> — both in India and internationally. Every project gets my full attention, fast turnaround and unlimited revisions until you're happy.</p>
+        <p style="color:var(--gold);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:1.05rem">Fresh in the field. 100% committed to the craft.</p>
+      </div>
+      <div class="about-right reveal">
+        <div class="about-card">
+          <div class="about-card-label">Tools & Software</div>
+          <div class="tools-row">
+            <span class="tool-pill">Adobe Premiere Pro</span>
+            <span class="tool-pill">After Effects</span>
+            <span class="tool-pill">Photoshop</span>
+            <span class="tool-pill">AI Video Tools</span>
+          </div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-label">Why Work With Me</div>
+          <div class="perks-list">
+            <!--<div class="perk"><div class="perk-icon">⚡</div>Fast 24–48hr delivery</div>-->
+            <div class="perk"><div class="perk-icon">♾️</div>Unlimited revisions — until you love it</div>
+            <div class="perk"><div class="perk-icon">💬</div>Clear communication throughout</div>
+            <div class="perk"><div class="perk-icon">🌍</div>Available for India & International clients</div>
+            <div class="perk"><div class="perk-icon">💰</div>Beginner-friendly pricing</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- CONTACT -->
-<section id="contact" style="padding:60px 5vw;max-width:1400px;margin:0 auto;">
-  <div class="section-label">// GET IN TOUCH</div>
-  <h2 class="section-title" style="margin-bottom:32px;">LET'S WORK<br>TOGETHER</h2>
-  <div style="display:flex;gap:16px;flex-wrap:wrap;">
-    <a href="mailto:your@email.com" style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:var(--accent);color:#000;text-decoration:none;border-radius:8px;font-weight:600;font-size:.9rem;">📧 Email Me</a>
-    <a href="#" style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:var(--surface);border:1px solid var(--border);color:var(--text);text-decoration:none;border-radius:8px;font-weight:500;font-size:.9rem;">💼 LinkedIn</a>
-    <a href="#" style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:var(--surface);border:1px solid var(--border);color:var(--text);text-decoration:none;border-radius:8px;font-weight:500;font-size:.9rem;">📱 Instagram</a>
+<section class="contact-section" id="contact">
+  <div class="section-wrap">
+    <div class="reveal">
+      <div class="section-eyebrow">Contact</div>
+      <h2 class="section-title">Let's Work <em>Together</em></h2>
+      <p class="section-sub">Have a project in mind? Reach out — I respond within 24 hours.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-links reveal">
+        <a href="mailto:avikumarca@gmail.com" class="contact-link">
+          <div class="contact-link-icon">📧</div>
+          <div>
+            <div class="contact-link-text">Email Me</div>
+            <div class="contact-link-sub">avikumarca@gmail.com</div>
+          </div>
+          <div class="contact-link-arrow">→</div>
+        </a>
+        <a href="https://discord.com/users/958775653086429234" class="contact-link">
+          <div class="contact-link-icon">📸</div>
+          <div>
+            <div class="contact-link-text">Discord</div>
+            <div class="contact-link-sub">@theynji</div>
+          </div>
+        </a>
+        <a href="https://wa.me/917004859132" class="contact-link">
+          <div class="contact-link-icon">💬</div>
+          <div>
+            <div class="contact-link-text">WhatsApp</div>
+            <div class="contact-link-sub">Quick response guaranteed</div>
+          </div>
+          <div class="contact-link-arrow">→</div>
+        </a>
+      </div>
+      <div class="contact-note reveal">
+        <div class="contact-note-title">Ready to make your content <em>stand out?</em></div>
+        <p>Whether you're a creator looking for a reliable editor or a brand needing fresh visuals . I'm here and ready to work. Let's build something great together.</p>
+        <div class="contact-note-perks">
+          <div class="cnp">Free first consultation</div>
+          <!-- <div class="cnp">24–48hr turnaround</div> -->
+          <div class="cnp">Unlimited revisions</div>
+          <div class="cnp">India & International clients welcome</div>
+          <div class="cnp">Affordable beginner pricing</div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">YOUR<span>.</span>REEL</div>
-  <div class="footer-copy">© 2025 — Video Editor & Thumbnail Designer</div>
+  <div class="footer-logo">TheyNG<span>.</span></div>
+  <div class="footer-copy">© 2025 AVINASH SHUBRANSHU · ALL RIGHTS RESERVED</div>
   <div class="footer-links">
     <a href="#work">Work</a>
+    <a href="#services">Services</a>
     <a href="#about">About</a>
     <a href="#contact">Contact</a>
   </div>
 </footer>
 
 <!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
-  <div class="lightbox-inner">
-    <button class="lb-close" onclick="closeLightbox()">✕</button>
-    <div class="lb-media">
-      <div class="lb-media-inner" id="lbMedia">
-        <div class="big-icon">▶</div>
-        <div>Replace this with your actual video or image</div>
-        <div style="font-size:.7rem;opacity:.5;">Add your YouTube embed / image src in the project data</div>
-      </div>
+<div class="lightbox" id="lightbox">
+  <div class="lb-box">
+    <div class="lb-close-bar">
+      <button class="lb-close-btn" onclick="closeLb()">✕</button>
+    </div>
+    <div class="lb-media" id="lbMedia">
+      <div class="lb-placeholder"><div class="big">▶</div><div>Add your media link in the project data</div></div>
     </div>
     <div class="lb-info">
-      <div class="lb-category" id="lbCategory"></div>
+      <div class="lb-cat" id="lbCat"></div>
       <div class="lb-title" id="lbTitle"></div>
       <div class="lb-desc" id="lbDesc"></div>
       <div class="lb-meta" id="lbMeta"></div>
@@ -863,289 +1147,207 @@
 </div>
 
 <script>
-// ─── PROJECT DATA ─────────────────────────────────────────────
-// TO ADD YOUR PROJECTS: copy a project object, fill in your details.
-// For videos: add a YouTube embed URL in `embedUrl`
-// For thumbnails: add an image URL in `imageUrl`
+// ── CURSOR ──────────────────────────────────────────────────────
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  setTimeout(() => {
+    ring.style.left = e.clientX + 'px';
+    ring.style.top = e.clientY + 'px';
+  }, 80);
+});
+
+// ── PROJECTS DATA ───────────────────────────────────────────────
+// ADD YOUR PROJECTS HERE — paste your Google Drive converted links in embedUrl / imageUrl
 const PROJECTS = [
   {
     id: 1,
-    type: "video",       // "video" | "thumbnail" | "shorts" | "motion"
-    niche: "gaming",
-    featured: true,      // Makes it a wide card
-    title: "GAMING MONTAGE EDIT",
-    subtitle: "High-energy gaming",
-    desc: "Fast-paced gaming montage with custom motion graphics, synced cuts, and color grading to match the hype.",
-    tags: ["Premiere Pro", "After Effects", "Color Grade"],
-    bg: "bg-1",
-    icon: "🎮",
-    duration: "4:32",
-    client: "Gaming Channel",
-    year: "2024",
-    embedUrl: "" // ← Paste your YouTube embed URL here
+    type: 'motion',
+    niche: 'Motion Graphics',
+    featured: true,
+    title: 'Motion Graphics Project 1',
+    desc: 'Animated motion graphics created using After Effects — smooth transitions, dynamic text and brand visuals.',
+    tags: ['After Effects', 'Motion', 'Animation'],
+    icon: '✨',
+    bg: 'g1',
+    client: '',
+    year: '2025',
+    embedUrl: '',   // ← paste Google Drive /preview link
+    imageUrl: '',
   },
   {
     id: 2,
-    type: "thumbnail",
-    niche: "gaming",
+    type: 'motion',
+    niche: 'Motion Graphics',
     featured: false,
-    title: "VIRAL THUMBNAIL",
-    subtitle: "Gaming niche",
-    desc: "CTR-optimized gaming thumbnail with bold text, dramatic lighting, and high-contrast design.",
-    tags: ["Photoshop", "Typography", "Gaming"],
-    bg: "bg-5",
-    icon: "🖼️",
-    client: "500K Sub Channel",
-    year: "2024",
-    imageUrl: "" // ← Paste your image URL here
+    title: 'Motion Graphics Project 2',
+    desc: 'Second motion graphics piece with custom animated elements and visual effects.',
+    tags: ['After Effects', 'VFX', 'Animation'],
+    icon: '✨',
+    bg: 'g2',
+    client: '',
+    year: '2025',
+    embedUrl: '',
+    imageUrl: '',
   },
   {
     id: 3,
-    type: "video",
-    niche: "vlog",
+    type: 'thumbnail',
+    niche: 'Thumbnail Design',
     featured: false,
-    title: "TRAVEL VLOG EDIT",
-    subtitle: "Cinematic travel",
-    desc: "Cinematic travel vlog with colour-matched shots, ambient music bed and smooth J-cuts throughout.",
-    tags: ["DaVinci", "Color Grade", "Cinematic"],
-    bg: "bg-2",
-    icon: "✈️",
-    duration: "12:15",
-    client: "Travel Creator",
-    year: "2025",
-    embedUrl: ""
+    title: 'Thumbnail Design 1',
+    desc: 'Eye-catching thumbnail designed in Photoshop with bold typography and high-contrast visuals.',
+    tags: ['Photoshop', 'Typography', 'Design'],
+    icon: '🖼️',
+    bg: 'g4',
+    client: '',
+    year: '2025',
+    embedUrl: '',
+    imageUrl: '',  // ← paste Google Drive image link
   },
   {
     id: 4,
-    type: "thumbnail",
-    niche: "vlog",
+    type: 'thumbnail',
+    niche: 'Thumbnail Design',
     featured: false,
-    title: "TRAVEL SERIES THUMB",
-    subtitle: "Travel & lifestyle",
-    desc: "Series of cohesive travel thumbnails maintaining a consistent brand identity across 20+ videos.",
-    tags: ["Photoshop", "Branding", "Series"],
-    bg: "bg-6",
-    icon: "🌍",
-    client: "Travel Vlogger",
-    year: "2025",
-    imageUrl: ""
+    title: 'Thumbnail Design 2',
+    desc: 'CTR-focused thumbnail with dramatic lighting and scroll-stopping composition.',
+    tags: ['Photoshop', 'Color', 'CTR'],
+    icon: '🖼️',
+    bg: 'g5',
+    client: '',
+    year: '2025',
+    embedUrl: '',
+    imageUrl: '',
   },
   {
     id: 5,
-    type: "shorts",
-    niche: "lifestyle",
+    type: 'thumbnail',
+    niche: 'Thumbnail Design',
     featured: false,
-    title: "LIFESTYLE REEL",
-    subtitle: "Instagram Reel",
-    desc: "Trendy vertical format reel with text animations, transitions, and trending audio sync.",
-    tags: ["Premiere", "Reels", "Vertical"],
-    bg: "bg-4",
-    icon: "⚡",
-    duration: "0:58",
-    client: "Lifestyle Brand",
-    year: "2025",
-    embedUrl: ""
+    title: 'Thumbnail Design 3',
+    desc: 'Clean, bold thumbnail design built for maximum click-through rate.',
+    tags: ['Photoshop', 'Design', 'YouTube'],
+    icon: '🖼️',
+    bg: 'g6',
+    client: '',
+    year: '2025',
+    embedUrl: '',
+    imageUrl: '',
   },
   {
     id: 6,
-    type: "motion",
-    niche: "business",
+    type: 'video',
+    niche: 'AI Video',
     featured: false,
-    title: "BRAND INTRO ANIMATION",
-    subtitle: "Motion graphics",
-    desc: "Slick 10-second logo reveal and brand intro animation for a marketing agency's YouTube channel.",
-    tags: ["After Effects", "Motion", "Branding"],
-    bg: "bg-8",
-    icon: "✨",
-    duration: "0:10",
-    client: "Marketing Agency",
-    year: "2024",
-    embedUrl: ""
+    title: 'AI Generated Video',
+    desc: 'AI-assisted video production combining AI-generated visuals with professional editing and post-production.',
+    tags: ['AI Tools', 'Premiere Pro', 'Video'],
+    icon: '🤖',
+    bg: 'g3',
+    client: '',
+    year: '2025',
+    embedUrl: '',
+    imageUrl: '',
   },
-  {
-    id: 7,
-    type: "video",
-    niche: "educational",
-    featured: false,
-    title: "TUTORIAL SERIES EDIT",
-    subtitle: "Educational content",
-    desc: "Long-form tutorial editing with chapter markers, lower thirds, smooth screen recording transitions.",
-    tags: ["Premiere", "Lower Thirds", "Chapters"],
-    bg: "bg-10",
-    icon: "📚",
-    duration: "28:44",
-    client: "EdTech Channel",
-    year: "2025",
-    embedUrl: ""
-  },
-  {
-    id: 8,
-    type: "thumbnail",
-    niche: "educational",
-    featured: false,
-    title: "EDUCATIONAL THUMBNAIL PACK",
-    subtitle: "5-video series",
-    desc: "Complete thumbnail set for a 5-part course series, designed for visual consistency and high CTR.",
-    tags: ["Photoshop", "Series", "Educational"],
-    bg: "bg-3",
-    icon: "🎓",
-    client: "Online Course",
-    year: "2025",
-    imageUrl: ""
-  },
-  {
-    id: 9,
-    type: "shorts",
-    niche: "music",
-    featured: false,
-    title: "MUSIC VIDEO CUTS",
-    subtitle: "Shorts / TikTok",
-    desc: "Beat-synced short-form clips from a full music video, repurposed for TikTok and Instagram Reels.",
-    tags: ["Premiere", "Beat Sync", "Music"],
-    bg: "bg-9",
-    icon: "🎵",
-    duration: "0:30",
-    client: "Independent Artist",
-    year: "2025",
-    embedUrl: ""
-  },
-  {
-    id: 10,
-    type: "thumbnail",
-    niche: "business",
-    featured: false,
-    title: "PODCAST THUMBNAIL",
-    subtitle: "Business podcast",
-    desc: "Professional podcast episode thumbnails with guest headshots, consistent branding and bold typography.",
-    tags: ["Photoshop", "Podcast", "Business"],
-    bg: "bg-7",
-    icon: "🎙️",
-    client: "Biz Podcast",
-    year: "2024",
-    imageUrl: ""
-  }
 ];
 
-// ─── STATE ────────────────────────────────────────────────────
-let activeCategory = 'all';
-let activeNiche = 'all';
+// ── FILTER ──────────────────────────────────────────────────────
+let activeFilter = 'all';
 
-// ─── COUNT BADGES ─────────────────────────────────────────────
-function updateCounts() {
-  const cats = ['all', 'video', 'thumbnail', 'shorts', 'motion'];
-  cats.forEach(cat => {
-    const count = cat === 'all' ? PROJECTS.length : PROJECTS.filter(p => p.type === cat).length;
-    const el = document.getElementById('count-' + cat);
-    if (el) el.textContent = count;
-  });
+function filterProjects(type, btn) {
+  activeFilter = type;
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid();
 }
 
-// ─── RENDER GRID ──────────────────────────────────────────────
 function renderGrid() {
-  const grid = document.getElementById('portfolioGrid');
-  const empty = document.getElementById('emptyState');
-  const filtered = PROJECTS.filter(p => {
-    const catMatch = activeCategory === 'all' || p.type === activeCategory;
-    const nicheMatch = activeNiche === 'all' || p.niche === activeNiche;
-    return catMatch && nicheMatch;
-  });
+  const grid = document.getElementById('projectGrid');
+  const empty = document.getElementById('gridEmpty');
+  const filtered = activeFilter === 'all' ? PROJECTS : PROJECTS.filter(p => p.type === activeFilter);
 
-  // Remove existing cards (not empty state)
   Array.from(grid.querySelectorAll('.project-card')).forEach(c => c.remove());
 
-  if (filtered.length === 0) {
-    empty.classList.add('show');
-    return;
-  }
+  if (!filtered.length) { empty.classList.add('show'); return; }
   empty.classList.remove('show');
 
-  filtered.forEach((proj, i) => {
-    const card = document.createElement('div');
-    card.className = 'project-card fade-up' + (proj.featured ? ' wide' : '');
-    card.style.transitionDelay = (i * 60) + 'ms';
-    card.onclick = () => openLightbox(proj);
+  const typeLabel = { video:'Video', thumbnail:'Thumbnail', motion:'Motion', shorts:'Shorts' };
 
-    const typeLabel = { video: 'VIDEO', thumbnail: 'THUMBNAIL', shorts: 'SHORT/REEL', motion: 'MOTION' };
-    const typeClass = proj.type === 'video' || proj.type === 'shorts' || proj.type === 'motion' ? 'video' : 'thumb';
-    const thumbClass = proj.type === 'thumbnail' ? 'square' : '';
+  filtered.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'project-card' + (p.featured ? ' featured' : '');
+    card.style.animationDelay = (i * 50) + 'ms';
+    card.onclick = () => openLb(p);
+
+    const isThumb = p.type === 'thumbnail';
+    let mediaContent = '';
+    if (p.imageUrl) {
+      mediaContent = `<img src="${p.imageUrl}" alt="${p.title}" loading="lazy">`;
+    } else if (p.embedUrl) {
+      mediaContent = `<iframe src="${p.embedUrl}" allowfullscreen loading="lazy"></iframe>`;
+    } else {
+      mediaContent = `<div class="card-media-inner ${p.bg}">${p.icon}</div>`;
+    }
 
     card.innerHTML = `
-      <div class="card-thumb ${thumbClass}">
-        <div class="thumb-placeholder ${proj.bg}">${proj.icon}</div>
-        <span class="card-type-badge ${typeClass}">${typeLabel[proj.type] || proj.type.toUpperCase()}</span>
-        <div class="card-play"><div class="card-play-btn">▶</div></div>
+      <div class="card-media ${isThumb ? 'sq' : ''}">
+        ${mediaContent}
+        <div class="card-type">${typeLabel[p.type] || p.type}</div>
+        <div class="card-overlay"><div class="card-play">▶</div></div>
       </div>
       <div class="card-body">
-        <div class="card-category">${proj.niche.toUpperCase()} · ${proj.year}</div>
-        <div class="card-title">${proj.title}</div>
-        <div class="card-desc">${proj.desc}</div>
-        <div class="card-tags">${proj.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+        <div class="card-niche">${p.niche} · ${p.year}</div>
+        <div class="card-title">${p.title}</div>
+        <div class="card-desc">${p.desc}</div>
+        <div class="card-tags">${p.tags.map(t=>`<span class="ctag">${t}</span>`).join('')}</div>
       </div>`;
     grid.insertBefore(card, empty);
   });
-
-  // Trigger fade-ups
-  setTimeout(() => {
-    grid.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
-  }, 50);
 }
 
-// ─── FILTER FUNCTIONS ─────────────────────────────────────────
-function filterCategory(cat, btn) {
-  activeCategory = cat;
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderGrid();
-}
-function filterNiche(niche, btn) {
-  activeNiche = niche;
-  document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderGrid();
-}
-
-// ─── LIGHTBOX ─────────────────────────────────────────────────
-function openLightbox(proj) {
+// ── LIGHTBOX ─────────────────────────────────────────────────────
+function openLb(p) {
   const lb = document.getElementById('lightbox');
-  document.getElementById('lbCategory').textContent = proj.type.toUpperCase() + ' · ' + proj.niche.toUpperCase();
-  document.getElementById('lbTitle').textContent = proj.title;
-  document.getElementById('lbDesc').textContent = proj.desc;
-
+  document.getElementById('lbCat').textContent = p.niche + ' · ' + p.year;
+  document.getElementById('lbTitle').textContent = p.title;
+  document.getElementById('lbDesc').textContent = p.desc;
   const meta = document.getElementById('lbMeta');
   meta.innerHTML = [
-    proj.client ? `<div class="lb-meta-item"><strong>CLIENT</strong>${proj.client}</div>` : '',
-    proj.year ? `<div class="lb-meta-item"><strong>YEAR</strong>${proj.year}</div>` : '',
-    proj.duration ? `<div class="lb-meta-item"><strong>DURATION</strong>${proj.duration}</div>` : '',
+    p.client ? `<div class="lb-meta-item"><strong>CLIENT</strong>${p.client}</div>` : '',
+    `<div class="lb-meta-item"><strong>TYPE</strong>${p.type.charAt(0).toUpperCase()+p.type.slice(1)}</div>`,
+    `<div class="lb-meta-item"><strong>TOOLS</strong>${p.tags.join(', ')}</div>`,
   ].join('');
 
-  const mediaEl = document.getElementById('lbMedia');
-  if (proj.embedUrl) {
-    mediaEl.innerHTML = `<iframe style="position:absolute;inset:0;width:100%;height:100%;border:none;" src="${proj.embedUrl}" allowfullscreen></iframe>`;
-  } else if (proj.imageUrl) {
-    mediaEl.innerHTML = `<img src="${proj.imageUrl}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;" alt="${proj.title}">`;
+  const med = document.getElementById('lbMedia');
+  if (p.embedUrl) {
+    med.innerHTML = `<iframe src="${p.embedUrl}" allowfullscreen></iframe>`;
+  } else if (p.imageUrl) {
+    med.innerHTML = `<img src="${p.imageUrl}" alt="${p.title}" style="width:100%;height:100%;object-fit:contain">`;
   } else {
-    mediaEl.innerHTML = `<div class="lb-media-inner"><div class="big-icon">${proj.icon}</div><div>Add your media URL in the project data</div><div style="font-size:.7rem;opacity:.5;">embedUrl for videos · imageUrl for thumbnails</div></div>`;
+    med.innerHTML = `<div class="lb-placeholder"><div class="big">${p.icon}</div><div>Add your Google Drive link to see preview</div></div>`;
   }
 
   lb.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
-function closeLightbox(e) {
-  if (e && e.target !== document.getElementById('lightbox') && !e.target.classList.contains('lb-close')) return;
+function closeLb() {
   document.getElementById('lightbox').classList.remove('open');
-  document.body.style.overflow = '';
   document.getElementById('lbMedia').innerHTML = '';
+  document.body.style.overflow = '';
 }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox({target: document.getElementById('lightbox')}); });
+document.getElementById('lightbox').addEventListener('click', e => { if(e.target === e.currentTarget) closeLb(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLb(); });
 
-// ─── SCROLL ANIMATIONS ────────────────────────────────────────
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-}, { threshold: 0.1 });
-document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+// ── SCROLL REVEAL ────────────────────────────────────────────────
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
-// ─── INIT ─────────────────────────────────────────────────────
-updateCounts();
+// ── INIT ─────────────────────────────────────────────────────────
 renderGrid();
 </script>
 </body>
